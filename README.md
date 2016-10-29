@@ -1,7 +1,7 @@
 # Docker build optimizations
 
-The aim of this micro project is to depict the way how to optimize your build process with Docker.
-Btw it's not perfect and have to be rethink.
+The aim of this micro project is to show how to optimize your build process with Docker.
+Btw it's not perfect and will have to be worked on.
 
 ## Dockerfile example
 
@@ -18,7 +18,8 @@ RUN node build.js > build-artifact
 # 2. clean stuff for building environment
 RUN rm -rf node_modules && rm -rf ./build.js
 ```
-We can divide the process of building into building the artifact and removing useless libraries and tools.
+We can divide the building process into two parts. The first involves building the artifact and the second, 
+removing useless libraries and tools.
 The `build-artifact` is the only thing that we need in the final image.
 
 ## The problem
@@ -39,7 +40,7 @@ We don't need `d3237dc0b157`, `f7ecf6c407d7` and `8914c03d630a`.
 
 ## The solution
 
-The one way to solve this issue is to remove this intermediate layers by using `docker export/import` commands.
+The one way to solve this issue is to remove these intermediate layers by using `docker export/import` commands.
 For more details see `docker-build.sh` script.
 
 ```bash
@@ -55,7 +56,7 @@ IMAGE               CREATED             CREATED BY          SIZE                
 ## The downsides and the really good solution
 
 So now there is one very small layer and everything in it. Is it perfect? - No. Because in this case Docker cannot
-cache pulled layers and have to download almost the same stuff every time.
+cache pulled layers and has to download almost the same stuff every time.
 
 The one solution that seems nice is [Rocker's from overloading](https://github.com/grammarly/rocker#from).
-Of course you can archieve the same effect with a simple bash-script but it won't be so obvious.
+Of course you can achieve the same effect with a simple bash-script but it won't be so obvious.
